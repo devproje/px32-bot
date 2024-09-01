@@ -60,7 +60,7 @@ tasks {
         archiveVersion.set("")
 
         manifest {
-            attributes["Main-Class"] = "net.projecttl.p.x32.Run"
+            attributes["Main-Class"] = "net.projecttl.p.x32.Px32"
         }
     }
 }
