@@ -18,7 +18,7 @@ public class Px32 {
 
 	private void register() {
 		commands.forEach(command -> {
-			jda.upsertCommand(command.getData()).queue();
+			jda.updateCommands().addCommands(command.getData()).queue();
 			log.info("Registered command: {}", command.getData().getName());
 		});
 	}
