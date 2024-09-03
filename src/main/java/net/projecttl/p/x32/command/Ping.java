@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.internal.interactions.CommandDataImpl;
-import net.projecttl.p.x32.handler.Command;
+import net.projecttl.p.x32.handler.CommandExecutor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
@@ -13,15 +13,15 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static java.lang.String.format;
 
-public class Ping implements Command {
-	@NotNull
-	@Override
-	public CommandData getData() {
-		return CommandData.fromData(new CommandDataImpl(
-			"ping",
-			"Discord API 레이턴시를 확인 합니다."
-		).toData());
-	}
+public class Ping implements CommandExecutor {
+    @NotNull
+    @Override
+    public CommandData getData() {
+        return CommandData.fromData(new CommandDataImpl(
+            "ping",
+            "Discord API 레이턴시를 확인 합니다."
+        ).toData());
+    }
 
 	@Override
 	public void execute(SlashCommandInteractionEvent ev) {

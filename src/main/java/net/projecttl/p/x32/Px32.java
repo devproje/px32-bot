@@ -2,8 +2,10 @@ package net.projecttl.p.x32;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.projecttl.p.x32.command.Ping;
-import net.projecttl.p.x32.handler.Command;
+import net.projecttl.p.x32.handler.CommandExecutor;
 import net.projecttl.p.x32.handler.CommandHandler;
 import net.projecttl.p.x32.handler.Ready;
 import org.slf4j.Logger;
@@ -14,12 +16,15 @@ import java.util.ArrayList;
 public class Px32 {
 	public static final Logger log = LoggerFactory.getLogger(Px32.class);
 	private JDA jda;
-	private final ArrayList<Command> commands = new ArrayList<>();
+	private final ArrayList<CommandExecutor> commands = new ArrayList<>();
 
 	private void register() {
 		commands.forEach(command -> {
-			jda.updateCommands().addCommands(command.getData()).queue();
-			log.info("Registered command: {}", command.getData().getName());
+			jda.upsertCommand(command.getData()).queue();
+			jda.updateCommands().addCommands(
+				Commands.context(Command.Type.USER, command.getData().getName())
+			).queue();
+			log.info("registered command: {}", command.getData().getName());
 		});
 	}
 

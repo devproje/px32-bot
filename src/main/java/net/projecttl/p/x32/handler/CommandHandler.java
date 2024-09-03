@@ -1,16 +1,16 @@
 package net.projecttl.p.x32.handler;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import net.projecttl.p.x32.Px32;
 
 import java.util.List;
 
 public class CommandHandler extends ListenerAdapter {
-    private final List<Command> commands;
+    private final List<CommandExecutor> commands;
 
-    public CommandHandler(List<Command> commands) {
+    public CommandHandler(List<CommandExecutor> commands) {
         this.commands = commands;
     }
 
@@ -20,15 +20,23 @@ public class CommandHandler extends ListenerAdapter {
             return;
         }
 
-        for (Command command : commands) {
+        for (CommandExecutor command : commands) {
             if (!command.getData().getName().equals(ev.getName())) {
                 continue;
             }
 
-            command.execute(ev);
-
-            Px32.log.info("user {} execute command: {}", ev.getUser().getId(), ev.getName());
+            try {
+                command.execute(ev);
+                Px32.log.info("user {} execute command: {}", ev.getUser().getId(), ev.getName());
+            } catch (Exception ex) {
+                Px32.log.error("user {} execute command {} failed", ev.getUser().getId(), ev.getName(), ex);
+            }
             break;
         }
+    }
+
+    @Override
+    public void onUserContextInteraction(UserContextInteractionEvent ev) {
+        Px32.log.info("user {} execute context: {}", ev.getUser().getId(), ev.getName());
     }
 }
