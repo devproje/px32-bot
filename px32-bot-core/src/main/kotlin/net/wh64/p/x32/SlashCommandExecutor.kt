@@ -19,21 +19,3 @@ interface MessageContextExecutor {
 	val data: CommandData
 	fun execute(ev: MessageContextInteractionEvent)
 }
-
-abstract class CommandAdapter : SlashCommandExecutor, UserContextExecutor, MessageContextExecutor {
-	abstract override val data: CommandData
-
-	override fun execute(ev: SlashCommandInteractionEvent) {
-		executor(ev)
-	}
-
-	override fun execute(ev: UserContextInteractionEvent) {
-		executor(ev)
-	}
-
-	override fun execute(ev: MessageContextInteractionEvent) {
-		executor(ev)
-	}
-
-	abstract fun executor(ev: Any)
-}
