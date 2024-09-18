@@ -1,14 +1,11 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     id("java")
     kotlin("jvm") version "2.0.20"
     id("com.gradleup.shadow") version "8.3.0"
 }
 
-group = "net.wh64"
-version = "1.0-SNAPSHOT"
+group = property("group")!!
+version = property("version")!!
 
 val ktor_version: String by project
 val log4j_version: String by project
@@ -39,32 +36,12 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.apache.logging.log4j:log4j-slf4j2-impl:$log4j_version")
     implementation("io.ktor:ktor-client-okhttp-jvm:2.3.12")
-//    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-//    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
 tasks {
     test {
         useJUnitPlatform()
-    }
-
-    withType<JavaCompile> {
-        options.encoding = "UTF-8"
-    }
-
-    withType<KotlinCompile> {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
-        }
-    }
-
-    shadowJar {
-        archiveBaseName.set(project.name)
-        archiveClassifier.set("")
-        archiveVersion.set("")
-
-        manifest {
-            attributes["Main-Class"] = "net.projecttl.p.x32.Px32"
-        }
     }
 }
