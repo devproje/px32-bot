@@ -1,4 +1,4 @@
-package net.projecttl.p.x32.exec.config
+package net.projecttl.p.x32.config
 
 import java.util.*
 import kotlin.reflect.KProperty
