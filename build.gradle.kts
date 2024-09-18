@@ -1,5 +1,7 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
-    id("java")
     kotlin("jvm") version "2.0.20"
     id("com.gradleup.shadow") version "8.3.0"
 }
@@ -41,6 +43,28 @@ dependencies {
 }
 
 tasks {
+    withType<KotlinCompile> {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_21)
+        }
+    }
+
+    processResources {
+        filesMatching("*.properties") {
+            expand(project.properties)
+        }
+    }
+
+    shadowJar {
+        archiveBaseName.set(project.name)
+        archiveClassifier.set("")
+        archiveVersion.set("")
+
+        manifest {
+            attributes["Main-Class"] = "net.projecttl.p.x32.Px32Kt"
+        }
+    }
+
     test {
         useJUnitPlatform()
     }
