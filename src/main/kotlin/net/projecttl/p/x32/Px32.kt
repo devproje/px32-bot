@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory
 val logger: Logger = LoggerFactory.getLogger(Px32::class.java)
 
 fun main() {
-	logger.info("PX32 version v${DefaultConfig.version}")
+	println("Px32 version v${DefaultConfig.version}")
 	val kernel = CoreKernel(System.getenv("TOKEN"))
 	kernel.addHandler(Ready)
 
