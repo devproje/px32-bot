@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.0.20"
+    kotlin("plugin.serialization") version "2.0.20"
 }
 
 group = property("group")!!
@@ -11,6 +12,7 @@ val exposed_version: String by project
 
 allprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
 
     java {
         toolchain {
@@ -39,6 +41,8 @@ subprojects {
         implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
         implementation("org.apache.logging.log4j:log4j-slf4j2-impl:$log4j_version")
         implementation("io.ktor:ktor-client-okhttp-jvm:2.3.12")
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.2")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
         testImplementation(platform("org.junit:junit-bom:5.10.0"))
         testImplementation("org.junit.jupiter:junit-jupiter")
     }

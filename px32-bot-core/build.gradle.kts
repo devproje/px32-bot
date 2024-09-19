@@ -5,14 +5,16 @@ plugins {
     id("com.gradleup.shadow") version "8.3.0"
 }
 
-group = "net.projecttl"
-version = "0.1.0-SNAPSHOT"
+group = rootProject.group
+version = rootProject.version
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    implementation(project(":${rootProject.name}-api"))
+    implementation(project(":${rootProject.name}-func"))
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }

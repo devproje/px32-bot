@@ -1,4 +1,4 @@
-package net.projecttl.p.x32.util
+package net.projecttl.p.x32.api.util
 
 import net.dv8tion.jda.api.EmbedBuilder
 import kotlin.random.Random

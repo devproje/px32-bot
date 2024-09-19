@@ -1,4 +1,4 @@
-package net.projecttl.p.x32.handler
+package net.projecttl.p.x32.api.command
 
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent

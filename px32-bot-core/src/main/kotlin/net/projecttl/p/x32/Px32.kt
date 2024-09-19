@@ -1,9 +1,8 @@
 package net.projecttl.p.x32
 
 import net.dv8tion.jda.api.JDA
-import net.projecttl.p.x32.command.Avatar
-import net.projecttl.p.x32.command.Ping
 import net.projecttl.p.x32.config.DefaultConfig
+import net.projecttl.p.x32.func.loadDefault
 import net.projecttl.p.x32.handler.Ready
 import net.projecttl.p.x32.kernel.CoreKernel
 import org.slf4j.Logger
@@ -18,10 +17,9 @@ fun main() {
 	kernel.addHandler(Ready)
 
 	val handler = kernel.getGlobalCommandHandler()
-	handler.addCommand(Avatar)
-	handler.addCommand(Ping)
+	loadDefault(handler)
 
 	jda = kernel.build()
 }
 
-class Px32
+object Px32

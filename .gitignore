@@ -10,6 +10,9 @@ build/
 .env
 !.env.example
 
+deploy.sh
+plugins/
+
 ### IntelliJ IDEA ###
 .idea/
 *.iws

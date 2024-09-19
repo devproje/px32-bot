@@ -1,4 +1,4 @@
-package net.projecttl.p.x32.handler
+package net.projecttl.p.x32.api.command
 
 import kotlinx.coroutines.runBlocking
 import net.dv8tion.jda.api.JDA
@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEven
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.commands.Command
 import net.dv8tion.jda.api.interactions.commands.build.Commands
-import net.projecttl.p.x32.logger
 
 class CommandHandler(val guildId: Long = 0L) : ListenerAdapter() {
 	private val commands = mutableListOf<CommandExecutor>()
@@ -73,7 +72,7 @@ class CommandHandler(val guildId: Long = 0L) : ListenerAdapter() {
 		val guild = jda.getGuildById(guildId)
 		if (guildId != 0L) {
 			if (guild == null) {
-				logger.info("'${guildId}' guild is not exists!")
+				println("'${guildId}' guild is not exists!")
 				return
 			}
 		}
@@ -84,10 +83,10 @@ class CommandHandler(val guildId: Long = 0L) : ListenerAdapter() {
 			if (command is GlobalCommand) {
 				if (guild == null) {
 					jda.upsertCommand(data).queue()
-					logger.info("Register Global Command: /${data.name}")
+					println("Register Global Command: /${data.name}")
 				} else {
 					guild.upsertCommand(data).queue()
-					logger.info("Register '${guild.id}' Guild's Command: /${data.name}")
+					println("Register '${guild.id}' Guild's Command: /${data.name}")
 				}
 			}
 
@@ -98,13 +97,13 @@ class CommandHandler(val guildId: Long = 0L) : ListenerAdapter() {
 						Commands.message(data.name)
 					).queue()
 
-					logger.info("Register User Context Command: /${data.name}")
+					println("Register User Context Command: /${data.name}")
 				} else {
 					guild.updateCommands().addCommands(
 						Commands.context(Command.Type.USER, data.name),
 						Commands.message(data.name)
 					).queue()
-					logger.info("Register '${guild.id}' Guild's User Context Command: /${data.name}")
+					println("Register '${guild.id}' Guild's User Context Command: /${data.name}")
 				}
 			}
 
@@ -115,14 +114,14 @@ class CommandHandler(val guildId: Long = 0L) : ListenerAdapter() {
 						Commands.message(data.name)
 					)
 
-					logger.info("Register Message Context Command: /${data.name}")
+					println("Register Message Context Command: /${data.name}")
 				} else {
 					guild.updateCommands().addCommands(
 						Commands.context(Command.Type.MESSAGE, data.name),
 						Commands.message(data.name)
 					)
 
-					logger.info("Register '${guild.id}' Guild's Message Context Command: /${data.name}")
+					println("Register '${guild.id}' Guild's Message Context Command: /${data.name}")
 				}
 			}
 		}
