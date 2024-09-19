@@ -17,6 +17,10 @@ object PluginLoader {
         }
     }
 
+    fun getPlugins(): Map<PluginConfig, Plugin> {
+        return plugins.toMap()
+    }
+
     fun load() {
         parentDir.listFiles()?.forEach { file ->
             if (file.name.endsWith(".jar")) {
@@ -43,10 +47,6 @@ object PluginLoader {
                 }
             }
         }
-    }
-
-    fun getPlugins(): Map<PluginConfig, Plugin> {
-        return plugins.toMap()
     }
 
     fun destroy() {

@@ -92,35 +92,21 @@ class CommandHandler(val guildId: Long = 0L) : ListenerAdapter() {
 
 			if (command is UserContext) {
 				if (guild == null) {
-					jda.updateCommands().addCommands(
-						Commands.context(Command.Type.USER, data.name),
-						Commands.message(data.name)
-					).queue()
+					jda.upsertCommand(Commands.user(data.name)).queue()
 
 					println("Register User Context Command: /${data.name}")
 				} else {
-					guild.updateCommands().addCommands(
-						Commands.context(Command.Type.USER, data.name),
-						Commands.message(data.name)
-					).queue()
+					guild.upsertCommand(Commands.user(data.name)).queue()
 					println("Register '${guild.id}' Guild's User Context Command: /${data.name}")
 				}
 			}
 
 			if (command is MessageContext) {
 				if (guild == null) {
-					jda.updateCommands().addCommands(
-						Commands.context(Command.Type.MESSAGE, data.name),
-						Commands.message(data.name)
-					)
-
+					jda.upsertCommand(Commands.message(data.name))
 					println("Register Message Context Command: /${data.name}")
 				} else {
-					guild.updateCommands().addCommands(
-						Commands.context(Command.Type.MESSAGE, data.name),
-						Commands.message(data.name)
-					)
-
+					guild.upsertCommand(Commands.message(data.name))
 					println("Register '${guild.id}' Guild's Message Context Command: /${data.name}")
 				}
 			}
