@@ -40,6 +40,7 @@ class CoreKernel(token: String) {
 			logger.info("Load plugin ${c.name} v${c.version}")
 			p.onLoad()
 
+			builder.addEventListeners(p.getCommandContainer())
 			p.getHandlers().map { handler ->
 				builder.addEventListeners(handler)
 			}

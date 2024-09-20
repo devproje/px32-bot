@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionE
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import net.dv8tion.jda.api.interactions.commands.Command
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 
 class CommandHandler(val guildId: Long = 0L) : ListenerAdapter() {
@@ -66,6 +65,10 @@ class CommandHandler(val guildId: Long = 0L) : ListenerAdapter() {
 
 	fun delCommand(command: CommandExecutor) {
 		commands.remove(command)
+	}
+
+	fun getCommands(): List<CommandExecutor> {
+		return commands
 	}
 
 	fun register(jda: JDA) {

@@ -5,7 +5,7 @@ plugins {
 
 group = property("group")!!
 version = property("version")!!
-
+plugins
 val ktor_version: String by project
 val log4j_version: String by project
 val exposed_version: String by project
