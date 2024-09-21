@@ -12,7 +12,7 @@ object Avatar : UserContext {
 
 	override suspend fun execute(ev: UserContextInteractionEvent) {
 		val embed = EmbedBuilder()
-		embed.setTitle(":frame_photo: ${ev.user.name}'s Avatar")
+		embed.setTitle(":frame_photo: ${ev.target.name}'s Avatar")
 		embed.setImage("${ev.target.effectiveAvatarUrl}?size=512")
 		embed.colour()
 
