@@ -9,27 +9,24 @@ import org.slf4j.LoggerFactory
 
 abstract class Plugin {
     private val handlerContainer = mutableListOf<ListenerAdapter>()
-    private val config = this.javaClass.getResourceAsStream("/plugin.json")?.let {
+    val config = this.javaClass.getResourceAsStream("/plugin.json")!!.let {
         val raw = it.bufferedReader().readText()
         val obj = Json.decodeFromString<PluginConfig>(raw)
 
         return@let obj
     }
 
-    fun getLogger(): Logger {
-        return LoggerFactory.getLogger(config?.name)
-    }
+    var logger: Logger = LoggerFactory.getLogger(this::class.java)
 
-    fun getHandlers(): List<ListenerAdapter> {
-        return handlerContainer
-    }
+    val handlers: List<ListenerAdapter>
+        get() = handlerContainer
 
     fun addHandler(listener: ListenerAdapter) {
-        handlerContainer.add(listener)
+        handlerContainer += listener
     }
 
     fun delHandler(listener: ListenerAdapter) {
-        handlerContainer.remove(listener)
+        handlerContainer -= listener
     }
 
     abstract fun onLoad()

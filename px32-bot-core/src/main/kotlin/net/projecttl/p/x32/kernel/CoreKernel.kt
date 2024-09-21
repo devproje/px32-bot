@@ -1,17 +1,27 @@
 package net.projecttl.p.x32.kernel
 
+import kotlinx.serialization.json.Json
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.projecttl.p.x32.api.Plugin
 import net.projecttl.p.x32.api.command.CommandHandler
+import net.projecttl.p.x32.api.model.PluginConfig
+import net.projecttl.p.x32.config.Config
+import net.projecttl.p.x32.func.General
 import net.projecttl.p.x32.jda
-import net.projecttl.p.x32.logger
 
 class CoreKernel(token: String) {
 	private val builder = JDABuilder.createDefault(token)
 	private val handlers = mutableListOf<ListenerAdapter>()
 	private val commandContainer = CommandHandler()
+
+	private fun include() {
+		if (Config.bundle) {
+			val b = General()
+			PluginLoader.putModule(b.config, b)
+		}
+	}
 
 	fun getCommandContainer(): CommandHandler {
 		return commandContainer
@@ -30,10 +40,11 @@ class CoreKernel(token: String) {
 	}
 
 	fun build(): JDA {
-		PluginLoader.load()
+		include()
 
+		PluginLoader.load()
 		plugins().forEach { plugin ->
-			plugin.getHandlers().forEach { handler ->
+			plugin.handlers.forEach { handler ->
 				handlers.add(handler)
 			}
 		}
@@ -62,7 +73,7 @@ class CoreKernel(token: String) {
 		val newHandlers = mutableListOf<ListenerAdapter>()
 		PluginLoader.destroy()
 		plugins().forEach { plugin ->
-			plugin.getHandlers().forEach { handler ->
+			plugin.handlers.forEach { handler ->
 				if (handlers.contains(handler)) {
 					jda.removeEventListener(handler)
 					handlers.remove(handler)
@@ -70,10 +81,11 @@ class CoreKernel(token: String) {
 			}
 		}
 
+		include()
 		PluginLoader.load()
 
 		plugins().forEach { plugin ->
-			plugin.getHandlers().forEach { handler ->
+			plugin.handlers.forEach { handler ->
 				if (!handlers.contains(handler)) {
 					handlers.add(handler)
 					newHandlers.add(handler)

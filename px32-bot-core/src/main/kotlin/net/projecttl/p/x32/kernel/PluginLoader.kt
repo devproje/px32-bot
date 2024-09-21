@@ -22,10 +22,25 @@ object PluginLoader {
         return plugins.toMap()
     }
 
+    fun putModule(config: PluginConfig, plugin: Plugin) {
+        try {
+            logger.info("Load module ${config.name} v${config.version}")
+            plugin.onLoad()
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            plugin.destroy()
+            return
+        }
+
+        plugins[config] = plugin
+    }
+
     fun load() {
         parentDir.listFiles()?.forEach { file ->
             loadPlugin(file)
         }
+
+        logger.info("Loaded ${plugins.size} plugins")
     }
 
     fun destroy() {
@@ -42,6 +57,10 @@ object PluginLoader {
     }
 
     private fun loadPlugin(file: File) {
+        if (file.name == "px32-bot-module") {
+            return
+        }
+
         if (!file.name.endsWith(".jar")) {
             return
         }

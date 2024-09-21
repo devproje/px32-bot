@@ -15,6 +15,14 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
-tasks.test {
-    useJUnitPlatform()
+tasks {
+    processResources {
+        filesMatching("plugin.json") {
+            expand(project.properties)
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+    }
 }

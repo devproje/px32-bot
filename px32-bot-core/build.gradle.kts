@@ -14,7 +14,7 @@ repositories {
 
 dependencies {
     implementation(project(":${rootProject.name}-api"))
-    implementation(project(":${rootProject.name}-func"))
+    implementation(project(":px32-bot-module"))
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }

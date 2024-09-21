@@ -1,0 +1,6 @@
+{
+    "name": "${project.name}",
+    "version": "${project.version}",
+    "main": "net.projecttl.p.x32.func.General"
+}
+

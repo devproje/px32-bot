@@ -5,8 +5,6 @@ import net.projecttl.p.x32.command.PluginCommand
 import net.projecttl.p.x32.command.Reload
 import net.projecttl.p.x32.config.Config
 import net.projecttl.p.x32.config.DefaultConfig
-import net.projecttl.p.x32.func.loadDefault
-import net.projecttl.p.x32.func.handler.Ready
 import net.projecttl.p.x32.kernel.CoreKernel
 import org.jetbrains.exposed.sql.Database
 import org.slf4j.Logger
@@ -26,11 +24,9 @@ fun main() {
 
 	kernel = CoreKernel(Config.token)
 	val handler = kernel.getCommandContainer()
-	kernel.addHandler(Ready)
 
 	handler.addCommand(Reload)
 	handler.addCommand(PluginCommand)
-	loadDefault(handler)
 
 	jda = kernel.build()
 }

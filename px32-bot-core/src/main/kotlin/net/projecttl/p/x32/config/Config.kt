@@ -15,6 +15,9 @@ object Config {
 	val token: String by useConfig()
 	val owner: String by useConfig()
 
+	private val bundle_func: String by useConfig()
+	val bundle = if (bundle_func == "1") true else if (bundle_func == "0") false else throw IllegalArgumentException("bundle_func option must be 0 or 1")
+
 	val db_driver: String by useConfig()
 	val db_url: String by useConfig()
 	val db_username: String by useConfig()
