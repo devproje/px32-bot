@@ -11,6 +11,10 @@ object Reload : GlobalCommand {
 	override val data = CommandData.fromData(CommandDataImpl("reload", "플러그인을 다시 불러 옵니다").toData())
 
 	override suspend fun execute(ev: SlashCommandInteractionEvent) {
+		if (kernel.memLock) {
+			return
+		}
+
 		if (ev.user.id != Config.owner) {
 			return ev.reply(":warning: 권한을 가지고 있지 않아요").queue()
 		}

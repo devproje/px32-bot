@@ -1,17 +1,17 @@
 package net.projecttl.p.x32.kernel
 
-import kotlinx.serialization.json.Json
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.projecttl.p.x32.api.Plugin
 import net.projecttl.p.x32.api.command.CommandHandler
-import net.projecttl.p.x32.api.model.PluginConfig
 import net.projecttl.p.x32.config.Config
 import net.projecttl.p.x32.func.General
 import net.projecttl.p.x32.jda
 
 class CoreKernel(token: String) {
+	var memLock = false
+		private set
 	private val builder = JDABuilder.createDefault(token)
 	private val handlers = mutableListOf<ListenerAdapter>()
 	private val commandContainer = CommandHandler()
@@ -70,6 +70,10 @@ class CoreKernel(token: String) {
 	}
 
 	fun reload() {
+		if (!memLock) {
+			memLock = true
+		}
+
 		val newHandlers = mutableListOf<ListenerAdapter>()
 		PluginLoader.destroy()
 		plugins().forEach { plugin ->
@@ -102,5 +106,7 @@ class CoreKernel(token: String) {
 				h.register(jda)
 			}
 		}
+
+		memLock = false
 	}
 }

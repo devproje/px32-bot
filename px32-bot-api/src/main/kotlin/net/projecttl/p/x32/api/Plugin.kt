@@ -2,7 +2,6 @@ package net.projecttl.p.x32.api
 
 import kotlinx.serialization.json.Json
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import net.projecttl.p.x32.api.command.CommandHandler
 import net.projecttl.p.x32.api.model.PluginConfig
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

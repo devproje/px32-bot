@@ -1,7 +1,6 @@
 package net.projecttl.p.x32.kernel
 
 import kotlinx.serialization.json.Json
-import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.projecttl.p.x32.api.Plugin
 import net.projecttl.p.x32.api.model.PluginConfig
 import net.projecttl.p.x32.logger
