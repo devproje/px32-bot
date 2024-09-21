@@ -8,7 +8,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 abstract class Plugin {
-    private val globalCommandHandler = CommandHandler()
     private val handlerContainer = mutableListOf<ListenerAdapter>()
     private val config = this.javaClass.getResourceAsStream("/plugin.json")?.let {
         val raw = it.bufferedReader().readText()
@@ -31,10 +30,6 @@ abstract class Plugin {
 
     fun delHandler(listener: ListenerAdapter) {
         handlerContainer.remove(listener)
-    }
-
-    fun getCommandContainer(): CommandHandler {
-        return globalCommandHandler
     }
 
     abstract fun onLoad()

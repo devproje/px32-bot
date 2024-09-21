@@ -29,10 +29,6 @@ class CoreKernel(token: String) {
 	}
 
 	fun build(): JDA {
-		handlers.map {
-			builder.addEventListeners(it)
-		}
-		builder.addEventListeners(handler)
 		PluginLoader.load()
 
 		val plugins = PluginLoader.getPlugins()
@@ -40,11 +36,16 @@ class CoreKernel(token: String) {
 			logger.info("Load plugin ${c.name} v${c.version}")
 			p.onLoad()
 
-			builder.addEventListeners(p.getCommandContainer())
 			p.getHandlers().map { handler ->
-				builder.addEventListeners(handler)
+				handlers.add(handler)
 			}
 		}
+
+		handlers.map {
+			println("test $it")
+			builder.addEventListeners(it)
+		}
+		builder.addEventListeners(handler)
 
 		val jda = builder.build()
 		handler.register(jda)
