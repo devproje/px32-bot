@@ -11,7 +11,7 @@ object DefaultConfig {
 	val version: String by useConfig()
 }
 
-private class DefaultConfigDelegate {
+class DefaultConfigDelegate {
 	private val props = Properties()
 
 	init {

@@ -4,12 +4,17 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.build.CommandData
 import net.dv8tion.jda.internal.interactions.CommandDataImpl
 import net.projecttl.p.x32.api.command.GlobalCommand
+import net.projecttl.p.x32.config.Config
 import net.projecttl.p.x32.kernel
 
 object Reload : GlobalCommand {
 	override val data = CommandData.fromData(CommandDataImpl("reload", "플러그인을 다시 불러 옵니다").toData())
 
 	override suspend fun execute(ev: SlashCommandInteractionEvent) {
+		if (ev.user.id != Config.owner) {
+			return ev.reply(":warning: 권한을 가지고 있지 않아요").queue()
+		}
+
 		try {
 			kernel.reload()
 		} catch (ex: Exception) {

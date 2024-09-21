@@ -1,6 +1,7 @@
 package net.projecttl.p.x32.kernel
 
 import kotlinx.serialization.json.Json
+import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.projecttl.p.x32.api.Plugin
 import net.projecttl.p.x32.api.model.PluginConfig
 import net.projecttl.p.x32.logger
@@ -23,29 +24,7 @@ object PluginLoader {
 
     fun load() {
         parentDir.listFiles()?.forEach { file ->
-            if (file.name.endsWith(".jar")) {
-                val jar = JarFile(file)
-                val cnf = jar.entries().toList().singleOrNull { jarEntry -> jarEntry.name == "plugin.json" }
-                if (cnf != null) {
-                    val stream = jar.getInputStream(cnf)
-                    val raw = stream.use {
-                        return@use it.readBytes().toString(Charset.forName("UTF-8"))
-                    }
-
-                    val config = Json.decodeFromString<PluginConfig>(raw)
-                    val cl = URLClassLoader(arrayOf(file.toPath().toUri().toURL()))
-                    val clazz = cl.loadClass(config.main)
-                    val obj = clazz.getDeclaredConstructor().newInstance()
-
-                    if (obj is Plugin) {
-                        plugins[config] = obj
-                    } else {
-                        logger.error("${config.name} is not valid main class. aborted")
-                    }
-                } else {
-                    logger.error("${file.name} is not a plugin. aborted")
-                }
-            }
+            loadPlugin(file)
         }
     }
 
@@ -60,5 +39,38 @@ object PluginLoader {
                 ex.printStackTrace()
             }
         }
+    }
+
+    private fun loadPlugin(file: File) {
+        if (!file.name.endsWith(".jar")) {
+            return
+        }
+
+        val jar = JarFile(file)
+        val cnf = jar.entries().toList().singleOrNull { jarEntry -> jarEntry.name == "plugin.json" }
+        if (cnf == null)
+            return logger.error("${file.name} is not a plugin. aborted")
+
+        val stream = jar.getInputStream(cnf)
+        val raw = stream.use {
+            return@use it.readBytes().toString(Charset.forName("UTF-8"))
+        }
+
+        val config = Json.decodeFromString<PluginConfig>(raw)
+        val cl = URLClassLoader(arrayOf(file.toPath().toUri().toURL()))
+        val obj = cl.loadClass(config.main).getDeclaredConstructor().newInstance()
+
+        if (obj !is Plugin)
+            return logger.error("${config.name} is not valid main class. aborted")
+
+        try {
+            logger.info("Load plugin ${config.name} v${config.version}")
+            obj.onLoad()
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            return logger.error("Failed to load plugin ${config.name}")
+        }
+
+        plugins[config] = obj
     }
 }

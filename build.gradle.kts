@@ -5,10 +5,13 @@ plugins {
 
 group = property("group")!!
 version = property("version")!!
-plugins
+
 val ktor_version: String by project
 val log4j_version: String by project
 val exposed_version: String by project
+
+val sqlite_version: String by project
+val postgres_version: String by project
 
 allprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
@@ -35,12 +38,13 @@ subprojects {
         implementation("net.dv8tion:JDA:5.1.0")
         implementation("io.ktor:ktor-client-cio:$ktor_version")
         implementation("io.ktor:ktor-client-core:$ktor_version")
+        implementation("org.xerial:sqlite-jdbc:$sqlite_version")
+        implementation("org.postgresql:postgresql:$postgres_version")
         implementation("org.apache.logging.log4j:log4j-api:$log4j_version")
         implementation("org.apache.logging.log4j:log4j-core:$log4j_version")
         implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
         implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
         implementation("org.apache.logging.log4j:log4j-slf4j2-impl:$log4j_version")
-        implementation("io.ktor:ktor-client-okhttp-jvm:2.3.12")
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.2")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
         testImplementation(platform("org.junit:junit-bom:5.10.0"))

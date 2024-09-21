@@ -5,15 +5,16 @@ import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.projecttl.p.x32.api.Plugin
 import net.projecttl.p.x32.api.command.CommandHandler
+import net.projecttl.p.x32.jda
 import net.projecttl.p.x32.logger
 
 class CoreKernel(token: String) {
 	private val builder = JDABuilder.createDefault(token)
 	private val handlers = mutableListOf<ListenerAdapter>()
-	private val handler = CommandHandler()
+	private val commandContainer = CommandHandler()
 
-	fun getGlobalCommandHandler(): CommandHandler {
-		return handler
+	fun getCommandContainer(): CommandHandler {
+		return commandContainer
 	}
 
 	fun addHandler(handler: ListenerAdapter) {
@@ -31,24 +32,19 @@ class CoreKernel(token: String) {
 	fun build(): JDA {
 		PluginLoader.load()
 
-		val plugins = PluginLoader.getPlugins()
-		plugins.forEach { (c, p) ->
-			logger.info("Load plugin ${c.name} v${c.version}")
-			p.onLoad()
-
-			p.getHandlers().map { handler ->
+		plugins().forEach { plugin ->
+			plugin.getHandlers().forEach { handler ->
 				handlers.add(handler)
 			}
 		}
 
 		handlers.map {
-			println("test $it")
 			builder.addEventListeners(it)
 		}
-		builder.addEventListeners(handler)
+		builder.addEventListeners(commandContainer)
 
 		val jda = builder.build()
-		handler.register(jda)
+		commandContainer.register(jda)
 		handlers.forEach { h ->
 			if (h is CommandHandler) {
 				h.register(jda)
@@ -63,15 +59,36 @@ class CoreKernel(token: String) {
 	}
 
 	fun reload() {
-		val plugins = PluginLoader.getPlugins()
-		plugins.forEach { (c, p) ->
-			logger.info("Reload plugin ${c.name} v${c.version}")
-			p.destroy()
+		val newHandlers = mutableListOf<ListenerAdapter>()
+		PluginLoader.destroy()
+		plugins().forEach { plugin ->
+			plugin.getHandlers().forEach { handler ->
+				if (handlers.contains(handler)) {
+					jda.removeEventListener(handler)
+					handlers.remove(handler)
+				}
+			}
 		}
 
 		PluginLoader.load()
-		plugins.forEach { (_, p) ->
-			p.onLoad()
+
+		plugins().forEach { plugin ->
+			plugin.getHandlers().forEach { handler ->
+				if (!handlers.contains(handler)) {
+					handlers.add(handler)
+					newHandlers.add(handler)
+				}
+			}
+		}
+
+		handlers.map {
+			builder.addEventListeners(it)
+		}
+
+		newHandlers.forEach { h ->
+			if (h is CommandHandler) {
+				h.register(jda)
+			}
 		}
 	}
 }

@@ -7,8 +7,10 @@ build/
 .fleet/
 .kotlin/
 
-.env
-!.env.example
+config.properties
+!config.sample.properties
+
+data.db
 
 deploy.sh
 plugins/
