@@ -8,6 +8,13 @@ import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEven
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 
+fun commandHandler(block: (CommandHandler) -> Unit): CommandHandler {
+	val handler = CommandHandler()
+	block.invoke(handler)
+
+	return handler
+}
+
 class CommandHandler(val guildId: Long = 0L) : ListenerAdapter() {
 	private val commands = mutableListOf<CommandExecutor>()
 
@@ -106,10 +113,10 @@ class CommandHandler(val guildId: Long = 0L) : ListenerAdapter() {
 
 			if (command is MessageContext) {
 				if (guild == null) {
-					jda.upsertCommand(Commands.message(data.name))
+					jda.upsertCommand(Commands.message(data.name)).queue()
 					println("Register Message Context Command: /${data.name}")
 				} else {
-					guild.upsertCommand(Commands.message(data.name))
+					guild.upsertCommand(Commands.message(data.name)).queue()
 					println("Register '${guild.id}' Guild's Message Context Command: /${data.name}")
 				}
 			}

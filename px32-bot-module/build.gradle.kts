@@ -2,8 +2,8 @@ plugins {
     id("java")
 }
 
-group = "net.projecttl"
-version = "0.1.0-SNAPSHOT"
+group = rootProject.group
+version = rootProject.version
 
 repositories {
     mavenCentral()

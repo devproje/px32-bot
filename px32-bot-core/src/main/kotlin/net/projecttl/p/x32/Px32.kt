@@ -1,6 +1,7 @@
 package net.projecttl.p.x32
 
 import net.dv8tion.jda.api.JDA
+import net.projecttl.p.x32.command.Info
 import net.projecttl.p.x32.command.PluginCommand
 import net.projecttl.p.x32.command.Reload
 import net.projecttl.p.x32.config.Config
@@ -25,6 +26,7 @@ fun main() {
 	kernel = CoreKernel(Config.token)
 	val handler = kernel.getCommandContainer()
 
+	handler.addCommand(Info)
 	handler.addCommand(Reload)
 	handler.addCommand(PluginCommand)
 

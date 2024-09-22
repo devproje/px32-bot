@@ -3,22 +3,31 @@ package net.projecttl.p.x32.kernel
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.hooks.ListenerAdapter
+import net.dv8tion.jda.api.requests.GatewayIntent
 import net.projecttl.p.x32.api.Plugin
 import net.projecttl.p.x32.api.command.CommandHandler
 import net.projecttl.p.x32.config.Config
-import net.projecttl.p.x32.func.General
+import net.projecttl.p.x32.func.BundleModule
 import net.projecttl.p.x32.jda
+import net.projecttl.p.x32.logger
 
 class CoreKernel(token: String) {
 	var memLock = false
 		private set
-	private val builder = JDABuilder.createDefault(token)
+	private val builder = JDABuilder.createDefault(token, listOf(
+		GatewayIntent.GUILD_PRESENCES,
+		GatewayIntent.GUILD_MEMBERS,
+		GatewayIntent.MESSAGE_CONTENT,
+		GatewayIntent.GUILD_VOICE_STATES,
+		GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
+		GatewayIntent.SCHEDULED_EVENTS
+	))
 	private val handlers = mutableListOf<ListenerAdapter>()
 	private val commandContainer = CommandHandler()
 
 	private fun include() {
 		if (Config.bundle) {
-			val b = General()
+			val b = BundleModule()
 			PluginLoader.putModule(b.config, b)
 		}
 	}
@@ -50,6 +59,7 @@ class CoreKernel(token: String) {
 		}
 
 		handlers.map {
+			logger.info("Load event listener: ${it::class.simpleName}")
 			builder.addEventListeners(it)
 		}
 		builder.addEventListeners(commandContainer)

@@ -10,6 +10,6 @@ object MsgLength : MessageContext {
 
 	override suspend fun execute(ev: MessageContextInteractionEvent) {
 		val target = ev.target
-		ev.reply("${target.jumpUrl} 메시지의 길이:\n\t${target.contentRaw.split("\\s+").size}").queue()
+		ev.reply("${target.jumpUrl} 메시지의 길이: ${target.contentRaw.length}").queue()
 	}
 }
