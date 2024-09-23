@@ -1,5 +1,8 @@
 package net.projecttl.p.x32.api.command
 
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent
@@ -15,6 +18,7 @@ fun commandHandler(block: (CommandHandler) -> Unit): CommandHandler {
 	return handler
 }
 
+@OptIn(DelicateCoroutinesApi::class)
 class CommandHandler(val guildId: Long = 0L) : ListenerAdapter() {
 	private val commands = mutableListOf<CommandExecutor>()
 
@@ -24,7 +28,7 @@ class CommandHandler(val guildId: Long = 0L) : ListenerAdapter() {
 		commands.forEach { command ->
 			if (command.data.name == name) {
 				if (command is GlobalCommand) {
-					runBlocking {
+					GlobalScope.launch {
 						command.execute(ev)
 					}
 
@@ -40,7 +44,7 @@ class CommandHandler(val guildId: Long = 0L) : ListenerAdapter() {
 		commands.forEach { command ->
 			if (command.data.name == name) {
 				if (command is UserContext) {
-					runBlocking {
+					GlobalScope.launch {
 						command.execute(ev)
 					}
 
@@ -56,7 +60,7 @@ class CommandHandler(val guildId: Long = 0L) : ListenerAdapter() {
 		commands.forEach { command ->
 			if (command.data.name == name) {
 				if (command is MessageContext) {
-					runBlocking {
+					GlobalScope.launch {
 						command.execute(ev)
 					}
 

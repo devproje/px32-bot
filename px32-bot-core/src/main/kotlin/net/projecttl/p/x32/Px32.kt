@@ -1,5 +1,8 @@
 package net.projecttl.p.x32
 
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.JDA
 import net.projecttl.p.x32.command.Info
 import net.projecttl.p.x32.command.PluginCommand
@@ -17,6 +20,7 @@ lateinit var database: Database
 
 val logger: Logger = LoggerFactory.getLogger(Px32::class.java)
 
+@OptIn(DelicateCoroutinesApi::class)
 fun main() {
 	println("Px32 version v${DefaultConfig.version}")
 	if (Config.owner.isBlank() || Config.owner.isEmpty()) {
@@ -31,6 +35,9 @@ fun main() {
 	handler.addCommand(PluginCommand)
 
 	jda = kernel.build()
+	GlobalScope.launch {
+		kernel.register(jda)
+	}
 }
 
 object Px32

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory
 
 abstract class Plugin {
     private val handlerContainer = mutableListOf<ListenerAdapter>()
+
     val config = this.javaClass.getResourceAsStream("/plugin.json")!!.let {
         val raw = it.bufferedReader().readText()
         val obj = Json.decodeFromString<PluginConfig>(raw)

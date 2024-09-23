@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData
 import net.dv8tion.jda.internal.interactions.CommandDataImpl
 import net.projecttl.p.x32.api.command.GlobalCommand
 import net.projecttl.p.x32.api.util.colour
+import net.projecttl.p.x32.api.util.footer
 import net.projecttl.p.x32.kernel.PluginLoader
 
 object PluginCommand : GlobalCommand {
@@ -18,6 +19,7 @@ object PluginCommand : GlobalCommand {
 			setThumbnail(ev.jda.selfUser.avatarUrl)
 
 			colour()
+			footer(ev.user)
 		}
 
 		val loader = PluginLoader.getPlugins()

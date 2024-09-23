@@ -10,7 +10,6 @@ class CorePlugin extends Plugin {
 		logger.info "Hello, World!"
 		CommandHandler handler = new CommandHandler()
 		handler.addCommand new Greeting()
-
 		addHandler handler
 	}
 
