@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData
 import net.dv8tion.jda.internal.interactions.CommandDataImpl
 import net.projecttl.p.x32.api.command.GlobalCommand
 import net.projecttl.p.x32.config.DefaultConfig
-import net.projecttl.p.x32.kernel.PluginLoader
+import net.projecttl.p.x32.kernel.CoreKernel.PluginLoader
 import java.lang.management.ManagementFactory
 
 object Info : GlobalCommand {

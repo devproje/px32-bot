@@ -3,7 +3,6 @@ package net.projecttl.p.x32.api.command
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
@@ -11,8 +10,8 @@ import net.dv8tion.jda.api.events.interaction.command.UserContextInteractionEven
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 
-fun commandHandler(block: (CommandHandler) -> Unit): CommandHandler {
-	val handler = CommandHandler()
+fun commandHandler(guildId: Long = 0L, block: (CommandHandler) -> Unit): CommandHandler {
+	val handler = CommandHandler(guildId)
 	block.invoke(handler)
 
 	return handler
@@ -25,15 +24,14 @@ class CommandHandler(val guildId: Long = 0L) : ListenerAdapter() {
 	override fun onSlashCommandInteraction(ev: SlashCommandInteractionEvent) {
 		val name = ev.interaction.name
 
-		commands.forEach { command ->
-			if (command.data.name == name) {
-				if (command is GlobalCommand) {
-					GlobalScope.launch {
-						command.execute(ev)
-					}
-
-					return@forEach
+		commands.singleOrNull { it.data.name == name }?.also { command ->
+			if (command is GlobalCommand) {
+				GlobalScope.launch {
+					command.execute(ev)
+					println("${ev.user.id} is use command for: ${ev.interaction.name}")
 				}
+
+				return
 			}
 		}
 	}
@@ -41,15 +39,14 @@ class CommandHandler(val guildId: Long = 0L) : ListenerAdapter() {
 	override fun onUserContextInteraction(ev: UserContextInteractionEvent) {
 		val name = ev.interaction.name
 
-		commands.forEach { command ->
-			if (command.data.name == name) {
-				if (command is UserContext) {
-					GlobalScope.launch {
-						command.execute(ev)
-					}
-
-					return@forEach
+		commands.singleOrNull { it.data.name == name }?.also { command ->
+			if (command is UserContext) {
+				GlobalScope.launch {
+					command.execute(ev)
+					println("${ev.user.id} is use user context for: ${ev.interaction.name}")
 				}
+
+				return
 			}
 		}
 	}
@@ -57,15 +54,14 @@ class CommandHandler(val guildId: Long = 0L) : ListenerAdapter() {
 	override fun onMessageContextInteraction(ev: MessageContextInteractionEvent) {
 		val name = ev.interaction.name
 
-		commands.forEach { command ->
-			if (command.data.name == name) {
-				if (command is MessageContext) {
-					GlobalScope.launch {
-						command.execute(ev)
-					}
-
-					return@forEach
+		commands.singleOrNull { it.data.name == name }?.also { command ->
+			if (command is MessageContext) {
+				GlobalScope.launch {
+					command.execute(ev)
+					println("${ev.user.id} is use message context for: ${ev.interaction.name}")
 				}
+
+				return
 			}
 		}
 	}

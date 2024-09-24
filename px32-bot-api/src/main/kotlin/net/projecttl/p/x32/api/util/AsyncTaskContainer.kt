@@ -38,16 +38,24 @@ class AsyncTask(val loop: Boolean = true, val block: suspend () -> Unit) {
  * This feature is Experimental
  */
 class AsyncTaskContainer {
-    private val tasks = mutableMapOf<Long, AsyncTask>()
+    val tasks = mutableMapOf<Long, AsyncTask>()
     private var tid = 0L
 
     fun getTask(tid: Long): AsyncTask? {
         return tasks[tid]
     }
 
-    fun createTask(task: AsyncTask) {
+    suspend fun createTask(task: AsyncTask) {
         tasks[tid] = task
         println("created task with id: $tid")
+        try {
+            task.run()
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            tasks.remove(tid)
+
+            return
+        }
 
         tid++
     }

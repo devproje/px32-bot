@@ -17,6 +17,8 @@ class BundleModule : Plugin() {
         addHandler(Ready)
         addHandler(commandHandler { handler ->
             handler.addCommand(Avatar)
+            handler.addCommand(Bmi)
+            handler.addCommand(Dice)
             handler.addCommand(MsgLength)
             handler.addCommand(MsgPurge)
             handler.addCommand(Ping)

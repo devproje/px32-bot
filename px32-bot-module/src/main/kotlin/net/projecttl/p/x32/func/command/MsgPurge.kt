@@ -1,11 +1,11 @@
 package net.projecttl.p.x32.func.command
 
-import net.projecttl.p.x32.func.Conf
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.CommandData
 import net.dv8tion.jda.internal.interactions.CommandDataImpl
 import net.projecttl.p.x32.api.command.GlobalCommand
+import net.projecttl.p.x32.func.Conf
 
 object MsgPurge : GlobalCommand {
 	override val data = CommandData.fromData(
