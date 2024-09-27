@@ -153,7 +153,11 @@ class CoreKernel(token: String) {
 
 		fun load() {
 			parentDir.listFiles()?.forEach { file ->
-				loadPlugin(file)
+				try {
+					loadPlugin(file)
+				} catch (ex: Exception) {
+					logger.error("error occurred while to plugin loading: ${ex.message}")
+				}
 			}
 
 			logger.info("Loaded ${plugins.size} plugins")
