@@ -6,10 +6,10 @@ import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.requests.GatewayIntent
+import net.dv8tion.jda.api.utils.MemberCachePolicy
 import net.projecttl.p.x32.api.Plugin
 import net.projecttl.p.x32.api.command.CommandHandler
 import net.projecttl.p.x32.api.model.PluginConfig
-import net.projecttl.p.x32.api.util.AsyncTaskContainer
 import net.projecttl.p.x32.config.Config
 import net.projecttl.p.x32.func.BundleModule
 import net.projecttl.p.x32.logger
@@ -22,11 +22,12 @@ class CoreKernel(token: String) {
 	private val builder = JDABuilder.createDefault(token, listOf(
 		GatewayIntent.GUILD_PRESENCES,
 		GatewayIntent.GUILD_MEMBERS,
+		GatewayIntent.GUILD_MESSAGES,
 		GatewayIntent.MESSAGE_CONTENT,
 		GatewayIntent.GUILD_VOICE_STATES,
 		GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
 		GatewayIntent.SCHEDULED_EVENTS
-	))
+	)).setMemberCachePolicy(MemberCachePolicy.ALL)
 	private val handlers = mutableListOf<ListenerAdapter>()
 	private val commandContainer = CommandHandler()
 
@@ -159,6 +160,8 @@ class CoreKernel(token: String) {
 		}
 
 		fun destroy() {
+			val unloaded = mutableListOf<PluginConfig>()
+
 			plugins.forEach { (config, plugin) ->
 				logger.info("disable ${config.name} plugin...")
 
@@ -168,6 +171,12 @@ class CoreKernel(token: String) {
 					logger.error("failed to destroy ${config.name} plugin")
 					ex.printStackTrace()
 				}
+
+				unloaded += config
+			}
+
+			unloaded.forEach {
+				plugins.remove(it)
 			}
 		}
 

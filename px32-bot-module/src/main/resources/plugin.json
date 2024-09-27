@@ -1,6 +1,6 @@
 {
     "name": "bundle-module",
-    "version": "${project.version}",
+    "version": "${rootProject.version}",
     "main": "net.projecttl.p.x32.func.BundleModule"
 }
 
