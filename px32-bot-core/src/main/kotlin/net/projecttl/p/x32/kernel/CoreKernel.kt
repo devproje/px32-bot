@@ -90,14 +90,10 @@ class CoreKernel(token: String) {
 			memLock.lock()
 		}
 
-		val newHandlers = mutableListOf<ListenerAdapter>()
 		PluginLoader.destroy()
 		plugins.forEach { plugin ->
-			plugin.handlers.forEach { handler ->
-				if (handlers.contains(handler)) {
-					jda.removeEventListener(handler)
-					handlers.remove(handler)
-				}
+			plugin.handlers.filter { handlers.contains(it) }.map {
+				handlers.remove(it)
 			}
 		}
 
@@ -108,13 +104,9 @@ class CoreKernel(token: String) {
 			plugin.handlers.forEach { handler ->
 				if (!handlers.contains(handler)) {
 					handlers.add(handler)
-					newHandlers.add(handler)
+					jda.addEventListener(handler)
 				}
 			}
-		}
-
-		handlers.map {
-			jda.addEventListener(it)
 		}
 
 		handlers.forEach { h ->

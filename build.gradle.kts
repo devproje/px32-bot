@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.0.20"
+    id("org.jetbrains.dokka") version "1.9.20"
     kotlin("plugin.serialization") version "2.0.20"
 }
 
@@ -14,6 +15,7 @@ val sqlite_version: String by project
 val postgres_version: String by project
 
 allprojects {
+    apply(plugin = "org.jetbrains.dokka")
     apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
 
