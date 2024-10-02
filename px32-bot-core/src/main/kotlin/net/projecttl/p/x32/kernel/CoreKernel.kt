@@ -24,18 +24,19 @@ class CoreKernel(token: String) {
 		private set
 
 	private val builder = JDABuilder.createDefault(token, listOf(
-		GatewayIntent.GUILD_PRESENCES,
 		GatewayIntent.GUILD_MEMBERS,
 		GatewayIntent.GUILD_MESSAGES,
 		GatewayIntent.MESSAGE_CONTENT,
+		GatewayIntent.GUILD_PRESENCES,
+		GatewayIntent.SCHEDULED_EVENTS,
 		GatewayIntent.GUILD_VOICE_STATES,
-		GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
-		GatewayIntent.SCHEDULED_EVENTS
+		GatewayIntent.GUILD_EMOJIS_AND_STICKERS
 	)).setMemberCachePolicy(MemberCachePolicy.ALL)
 
 	val memLock = Mutex()
 	val commandContainer = CommandHandler()
-	val plugins = mutableMapOf<PluginConfig, Plugin>()
+	var plugins = mutableMapOf<PluginConfig, Plugin>()
+		private set
 	var isActive = false
 		private set
 
@@ -133,18 +134,16 @@ class CoreKernel(token: String) {
 		}
 
 		destroy()
-		logger.info(jda.eventManager.registeredListeners.size.toString())
+		plugins = mutableMapOf()
 
+		include()
 		load()
-		logger.info(jda.eventManager.registeredListeners.size.toString())
 
 		plugins.forEach { (_, plugin) ->
 			plugin.handlers.forEach {
 				addHandler(it)
 			}
 		}
-
-		logger.info(jda.eventManager.registeredListeners.size.toString())
 
 		handlers.filterIsInstance<CommandHandler>().forEach { h ->
 			h.register(jda)
@@ -210,6 +209,8 @@ class CoreKernel(token: String) {
 		}
 
 		include()
+		load()
+
 		plugins.forEach { (_, plugin) ->
 			plugin.handlers.forEach { handler ->
 				logger.info("Load event listener: ${handler::class.simpleName}")

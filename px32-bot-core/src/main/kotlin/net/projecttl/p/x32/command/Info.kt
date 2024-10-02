@@ -19,8 +19,6 @@ object Info : GlobalCommand {
 		val r = Runtime.getRuntime()
 
 		val size = kernel.plugins.size
-		val hSize = kernel.handlers.size
-
 		val info = """
 			Px32Bot v${DefaultConfig.version}, JDA `v${JDAInfo.VERSION}`,
 			`Java ${System.getProperty("java.version")}` and `Kotlin ${KotlinVersion.CURRENT}` System on `${System.getProperty("os.name")}`
@@ -32,7 +30,6 @@ object Info : GlobalCommand {
 			Using `${(r.totalMemory() - r.freeMemory()) / 1048576}MB` at this Bot
 			
 			Total $size plugin${if (size > 1) "s" else ""} loaded
-			Total $hSize handler${if (hSize > 1) "s" else ""} used
         """.trimIndent()
 
 		ev.reply(info).queue()
