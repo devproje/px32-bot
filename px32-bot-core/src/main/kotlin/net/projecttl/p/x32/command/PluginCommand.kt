@@ -8,10 +8,10 @@ import net.dv8tion.jda.internal.interactions.CommandDataImpl
 import net.projecttl.p.x32.api.command.GlobalCommand
 import net.projecttl.p.x32.api.util.colour
 import net.projecttl.p.x32.api.util.footer
-import net.projecttl.p.x32.kernel.CoreKernel.PluginLoader
+import net.projecttl.p.x32.kernel
 
 object PluginCommand : GlobalCommand {
-	override val data = CommandData.fromData(CommandDataImpl("plugin", "봇에 불러온 플러그인을 확인 합니다").toData())
+	override val data = CommandData.fromData(CommandDataImpl("plugins", "봇에 불러온 플러그인을 확인 합니다").toData())
 
 	override suspend fun execute(ev: SlashCommandInteractionEvent) {
 		val embed = EmbedBuilder().apply {
@@ -22,7 +22,7 @@ object PluginCommand : GlobalCommand {
 			footer(ev.user)
 		}
 
-		val loader = PluginLoader.getPlugins()
+		val loader = kernel.plugins
 		val fields = loader.map { (c, _) ->
 			MessageEmbed.Field(":electric_plug: **${c.name}**", "`${c.version}`", true)
 		}

@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData
 import net.dv8tion.jda.internal.interactions.CommandDataImpl
 import net.projecttl.p.x32.api.command.GlobalCommand
 import net.projecttl.p.x32.config.DefaultConfig
-import net.projecttl.p.x32.kernel.CoreKernel.PluginLoader
+import net.projecttl.p.x32.kernel
 import java.lang.management.ManagementFactory
 
 object Info : GlobalCommand {
@@ -18,7 +18,8 @@ object Info : GlobalCommand {
 		val rb = ManagementFactory.getRuntimeMXBean()
 		val r = Runtime.getRuntime()
 
-		val size = PluginLoader.getPlugins().size
+		val size = kernel.plugins.size
+		val hSize = kernel.handlers.size
 
 		val info = """
 			Px32Bot v${DefaultConfig.version}, JDA `v${JDAInfo.VERSION}`,
@@ -30,7 +31,8 @@ object Info : GlobalCommand {
 			Assigned `${r.maxMemory() / 1048576}MB` of Max Memories at this Bot
 			Using `${(r.totalMemory() - r.freeMemory()) / 1048576}MB` at this Bot
 			
-			Total $size plugin${if (size > 1) "s" else ""} loaded 
+			Total $size plugin${if (size > 1) "s" else ""} loaded
+			Total $hSize handler${if (hSize > 1) "s" else ""} used
         """.trimIndent()
 
 		ev.reply(info).queue()
