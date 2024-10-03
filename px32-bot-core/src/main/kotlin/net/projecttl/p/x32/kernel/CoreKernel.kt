@@ -48,12 +48,12 @@ class CoreKernel(token: String) {
 
 	val handlers: List<ListenerAdapter>
 		get() {
-		if (!isActive) {
-			return listOf()
-		}
+			if (!isActive) {
+				return listOf()
+			}
 
-		return jda.eventManager.registeredListeners.map { it as ListenerAdapter }
-	}
+			return jda.eventManager.registeredListeners.map { it as ListenerAdapter }
+		}
 
 	fun addHandler(handler: ListenerAdapter) {
 		if (isActive) {
@@ -84,14 +84,26 @@ class CoreKernel(token: String) {
 		})
 	}
 
-	private fun include() {
+	suspend fun reload(jda: JDA) {
+		if (!memLock.isLocked) {
+			memLock.lock()
+		}
+
+		destroy()
+		load()
+		handlers.filterIsInstance<CommandHandler>().forEach { h ->
+			h.register(jda)
+		}
+
+		memLock.unlock()
+	}
+
+	private fun load() {
 		if (BotConfig.bundle) {
 			val b = BundleModule()
 			loadModule(b.config, b)
 		}
-	}
 
-	private fun load() {
 		parentDir.listFiles()?.forEach { file ->
 			try {
 				loadPlugin(file)
@@ -100,14 +112,25 @@ class CoreKernel(token: String) {
 			}
 		}
 
-		logger.info("Loaded ${plugins.size} plugins")
+		var cnt = 0
+		plugins.forEach { (_, plugin) ->
+			plugin.handlers.forEach {
+				addHandler(it)
+				logger.info("Load event listener: ${it::class.simpleName}")
+				cnt++
+			}
+		}
+
+		logger.info("Loaded ${plugins.size} plugin${if (plugins.size > 1) "s" else ""} and $cnt handler${if (cnt > 1) "s" else ""}.")
 	}
 
 	private fun destroy() {
-		val unloaded = mutableListOf<PluginConfig>()
-
 		plugins.forEach { (config, plugin) ->
 			logger.info("disable ${config.name} plugin...")
+
+			plugin.handlers.forEach {
+				delHandler(it)
+			}
 
 			try {
 				plugin.destroy()
@@ -117,39 +140,7 @@ class CoreKernel(token: String) {
 			}
 		}
 
-		unloaded.forEach {
-			plugins.remove(it)
-		}
-	}
-
-	suspend fun reload(jda: JDA) {
-		if (!memLock.isLocked) {
-			memLock.lock()
-		}
-
-		plugins.forEach { (_, plugin) ->
-			plugin.handlers.forEach {
-				delHandler(it)
-			}
-		}
-
-		destroy()
 		plugins = mutableMapOf()
-
-		include()
-		load()
-
-		plugins.forEach { (_, plugin) ->
-			plugin.handlers.forEach {
-				addHandler(it)
-			}
-		}
-
-		handlers.filterIsInstance<CommandHandler>().forEach { h ->
-			h.register(jda)
-		}
-
-		memLock.unlock()
 	}
 
 	private fun loadPlugin(file: File) {
@@ -208,16 +199,7 @@ class CoreKernel(token: String) {
 			return jda
 		}
 
-		include()
 		load()
-
-		plugins.forEach { (_, plugin) ->
-			plugin.handlers.forEach { handler ->
-				logger.info("Load event listener: ${handler::class.simpleName}")
-				addHandler(handler)
-			}
-		}
-
 		builder.addEventListeners(commandContainer)
 		jda = builder.build()
 		isActive = true
