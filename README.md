@@ -6,7 +6,7 @@
 - [Github](https://github.com/devproje/px32-bot.git)
 
 ## How to Use
-봇 구동기는 [이곳](https://gitlab.wh64.net/devproje/px32-bot/-/releases)에서 다운로드 받으실 수 있습니다.
+봇 구동기는 [이곳](https://github.com/devproje/px32-bot/releases)에서 다운로드 받으실 수 있습니다.
 
 ## Developments
 API를 사용하여 플러그인 개발을 원하신다면 아래의 코드로 라이브러리를 추가 해 주세요.
