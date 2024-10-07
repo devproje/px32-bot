@@ -33,21 +33,19 @@ fun main(args: Array<out String>) {
 	if (args.contains("--remove-cmd")) {
 		jda = kernel.build()
 		try {
-			jda.retrieveCommands().queue {
-				if (it == null) {
-					return@queue
-				}
+			val list = jda.retrieveCommands().complete()
+			if (list.isEmpty()) {
+				return
+			}
 
-				it.forEach { command ->
-					logger.info("unregister command: /${command.name}")
-					command.jda.deleteCommandById(command.id).queue()
-				}
+			list.forEach { command ->
+				logger.info("unregister command: /${command.name}")
+				command.jda.deleteCommandById(command.id).complete()
 			}
 		} catch (ex: Exception) {
 			ex.printStackTrace()
 		}
 
-		kernel.kill()
 		return
 	}
 

@@ -99,7 +99,10 @@ class CoreKernel(token: String) {
 	}
 
 	fun kill() {
+		isActive = false
+
 		destroy()
+		logger.info("shutdown now Px32 kernel v${DefaultConfig.version}")
 		jda.shutdownNow()
 	}
 
@@ -210,10 +213,7 @@ class CoreKernel(token: String) {
 		isActive = true
 
 		Runtime.getRuntime().addShutdownHook(Thread {
-			isActive = false
-
-			logger.info("shutdown now Px32 kernel v${DefaultConfig.version}")
-			jda.shutdownNow()
+			kill()
 		})
 
 		return jda
