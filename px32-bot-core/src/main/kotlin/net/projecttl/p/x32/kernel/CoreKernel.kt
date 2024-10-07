@@ -98,6 +98,11 @@ class CoreKernel(token: String) {
 		memLock.unlock()
 	}
 
+	fun kill() {
+		destroy()
+		jda.shutdownNow()
+	}
+
 	private fun load() {
 		if (BotConfig.bundle) {
 			val b = BundleModule()

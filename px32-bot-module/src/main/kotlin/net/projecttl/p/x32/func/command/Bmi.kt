@@ -3,9 +3,8 @@ package net.projecttl.p.x32.func.command
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.OptionType
-import net.dv8tion.jda.api.interactions.commands.build.CommandData
-import net.dv8tion.jda.internal.interactions.CommandDataImpl
 import net.projecttl.p.x32.api.command.GlobalCommand
+import net.projecttl.p.x32.api.command.useCommand
 import net.projecttl.p.x32.api.util.colour
 import net.projecttl.p.x32.api.util.footer
 import java.math.RoundingMode
@@ -13,10 +12,24 @@ import java.text.DecimalFormat
 import kotlin.math.pow
 
 object Bmi : GlobalCommand {
-	override val data = CommandData.fromData(CommandDataImpl("bmi", "키와 몸무게 기반으로 bmi지수를 계산할 수 있어요").apply {
-		addOption(OptionType.NUMBER, "height", "신장 길이를 적어 주세요 (cm)", true)
-		addOption(OptionType.NUMBER, "weight", "몸무게를 적어 주세요 (kg)", true)
-	}.toData())
+	override val data = useCommand {
+		name = "bmi"
+		description = "키와 몸무게 기반으로 bmi 지수를 계산해요"
+
+		option {
+			type = OptionType.NUMBER
+			name = "height"
+			description = "신장 길이를 적어 주세요 (cm)"
+			required = true
+		}
+
+		option {
+			type = OptionType.NUMBER
+			name = "weight"
+			description = "몸무게를 적어 주세요 (kg)"
+			required = true
+		}
+	}
 
 	override suspend fun execute(ev: SlashCommandInteractionEvent) {
 		val height = ev.getOption("height")!!.asDouble
@@ -30,9 +43,9 @@ object Bmi : GlobalCommand {
 		val bmi = weight / (height / 100).pow(2)
 		fun result(bmi: Double): String {
 			return when {
-				bmi < 18.5 				-> "**저체중**"
+				bmi < 18.5              -> "**저체중**"
 				bmi in 18.5..24.9 -> "**정상 체중**"
-				bmi in 25.0.. 29.9 	-> "**과체중**"
+				bmi in 25.0..29.9 -> "**과체중**"
 				else -> "**비만**"
 			}
 		}

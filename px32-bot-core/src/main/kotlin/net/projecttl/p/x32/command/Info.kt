@@ -3,16 +3,17 @@ package net.projecttl.p.x32.command
 import net.dv8tion.jda.api.JDAInfo
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.build.CommandData
-import net.dv8tion.jda.internal.interactions.CommandDataImpl
 import net.projecttl.p.x32.api.command.GlobalCommand
+import net.projecttl.p.x32.api.command.useCommand
 import net.projecttl.p.x32.config.DefaultConfig
 import net.projecttl.p.x32.kernel
 import java.lang.management.ManagementFactory
 
 object Info : GlobalCommand {
-	override val data: CommandData = CommandData.fromData(
-		CommandDataImpl("info","봇의 정보를 표시 합니다").toData()
-	)
+	override val data: CommandData = useCommand {
+		name = "info"
+		description = "봇의 정보를 표시 합니다"
+	}
 
 	override suspend fun execute(ev: SlashCommandInteractionEvent) {
 		val rb = ManagementFactory.getRuntimeMXBean()
