@@ -1,6 +1,10 @@
 # Px32 Bot
 - [JDA](https://github.com/discord-jda/JDA)로 만든 Kotlin 디스코드 봇 구동기 입니다.
 
+## Project Repo
+- [Gitlab](https://gitlab.wh64.net/devproje/px32-bot.git)
+- [Github](https://github.com/devproje/px32-bot.git)
+
 ## How to Use
 봇 구동기는 [이곳](https://gitlab.wh64.net/devproje/px32-bot/-/releases)에서 다운로드 받으실 수 있습니다.
 
