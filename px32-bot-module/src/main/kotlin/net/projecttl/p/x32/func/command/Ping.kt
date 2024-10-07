@@ -6,16 +6,16 @@ import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.interactions.commands.build.CommandData
-import net.dv8tion.jda.internal.interactions.CommandDataImpl
 import net.projecttl.p.x32.api.command.GlobalCommand
+import net.projecttl.p.x32.api.command.useCommand
 import net.projecttl.p.x32.api.util.colour
 import net.projecttl.p.x32.api.util.footer
 
 object Ping : GlobalCommand {
-	override val data: CommandData = CommandData.fromData(CommandDataImpl(
-		"ping",
-		"Discord API 레이턴시 확인 합니다"
-	).toData())
+	override val data: CommandData = useCommand {
+		name = "ping"
+		description = "Discord API 레이턴시 확인 합니다"
+	}
 
 	override suspend fun execute(ev: SlashCommandInteractionEvent) {
 		val started = System.currentTimeMillis()
