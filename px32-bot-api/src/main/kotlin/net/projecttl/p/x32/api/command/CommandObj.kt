@@ -1,5 +1,6 @@
 package net.projecttl.p.x32.api.command
 
+import net.dv8tion.jda.api.interactions.commands.Command
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.CommandData
 import net.dv8tion.jda.api.interactions.commands.build.OptionData
@@ -122,7 +123,13 @@ class OptionObj {
 	var required: Boolean = false
 	var autoComplete: Boolean = false
 
+	var choices = mutableListOf<Command.Choice>()
+
 	fun build(): OptionData {
-		return OptionData(type, name, description, required, autoComplete)
+		return OptionData(type, name, description, required, autoComplete).apply {
+			this@OptionObj.choices.forEach {
+				addChoices(it)
+			}
+		}
 	}
 }
